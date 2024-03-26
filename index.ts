@@ -9,23 +9,21 @@ const getRequiredInput = (name: string): string =>
   const sha = core.getInput('sha') || github.context.sha
   const state = getRequiredInput('state') as StatusState
   const description = core.getInput('description')
-  const contextInput = getRequiredInput('context')
-  const context = contextInput.trim().split('\n');
+  const context = getRequiredInput('context')
   const targetUrl = core.getInput('target_url')
   const githubToken = core.getInput('github_token')
-  const octokit = new github.GitHub(githubToken)
 
-  for (const contextElement of context) {
-    await octokit.repos.createStatus({
-      ...github.context.repo,
-      sha,
-      state,
-      description,
-      context: contextElement,
-      ...(targetUrl && { target_url: targetUrl })
-    })
-    console.log(`Successfully posted a GitHub commit status for ${contextElement}.`)
-}
+  const octokit = new github.GitHub(githubToken)
+  await octokit.repos.createStatus({
+    ...github.context.repo,
+    sha,
+    state,
+    description,
+    context,
+    ...(targetUrl && { target_url: targetUrl }),
+  })
+
+  console.log('Successfully posted a GitHub commit status.')
 })().catch(error => {
   console.error(error)
   core.setFailed(error.message)
