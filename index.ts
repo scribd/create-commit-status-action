@@ -10,7 +10,7 @@ const getRequiredInput = (name: string): string =>
   const state = getRequiredInput('state') as StatusState
   const description = core.getInput('description')
   const contextInput = getRequiredInput('context')
-  const context = contextInput.trim().split('\n');
+  const context = contextInput.trim().split('\n')
   const targetUrl = core.getInput('target_url')
   const githubToken = core.getInput('github_token')
   const octokit = new github.GitHub(githubToken)
